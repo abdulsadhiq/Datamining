@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Data mining Final presentation</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Data mining Final presentation">
+  <meta name="author" content="Abdul Sadhiq K M">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/zenburn.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Data mining Final presentation</h1>
+    <h2>Analysis of German Credit Data</h2>
+    <p>Abdul Sadhiq K M<br/>Business analyst</p>
+  </hgroup>
+    <a href="https://github.com/abdulsadhiq/Datamining/zipball/gh-pages" class="example">
+     Download
+    </a>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <p><section class="slide1">
+  <h2>German Credit Data - Project description</h2>
+  <p>When a bank receives a loan application, based on the applicant&#39;s profile the bank has to make a decision regarding whether to go ahead with the loan approval or not</p>
+  <ol>
+    <li>
+      <h3>Risk factors</h3>
+      <p>If the applicant is a good credit risk, i.e. is likely to repay the loan, then not approving the loan to the person results in a loss of business to the bank</p>
+      <p>If the applicant is a bad credit risk, i.e. is not likely to repay the loan, then approving the loan to the person results in a financial loss to the bank</p>
+    </li>
+    <li>
+      <h3>Overall objective</h3>
+      <p>Minimization of risk and maximization of profit on behalf of the bank</p>
+    </li><br>
+  </ol>
+</section></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Environment set-up</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">options(warn = -1)
+library(klaR)
+</code></pre>
+
+<pre><code>## Loading required package: MASS
+</code></pre>
+
+<pre><code class="r">library(MASS)
+data(&quot;GermanCredit&quot;)
+library(caret)
+</code></pre>
+
+<pre><code>## Loading required package: lattice
+</code></pre>
+
+<pre><code>## Loading required package: ggplot2
+</code></pre>
+
+<pre><code class="r">require(ggplot2)
+GermanCredit.org&lt;-GermanCredit
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <article data-timings="">
+    <pre><code class="r">#levels(GermanCredit.org$personal_status_sex)
+barchart(table(GermanCredit.org$personal_status_sex))
+</code></pre>
+
+<p><img src="figure/unnamed-chunk-1-1.png" alt="plot of chunk unnamed-chunk-1"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Removing the additional level from Gender</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">GermanCredit.org$personal_status_sex&lt;-droplevels(GermanCredit.org$personal_status_sex)
+levels(GermanCredit.org$personal_status_sex)&lt;-levels(GermanCredit.org$personal_status_sex)[1:4]
+levels(GermanCredit.org$personal_status_sex)
+</code></pre>
+
+<p>[1] &quot;male : divorced/separated&quot;<br>
+[2] &quot;female : divorced/separated/married&quot;
+[3] &quot;male : single&quot;<br>
+[4] &quot;male : married/widowed&quot;             </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <article data-timings="">
+    <pre><code class="r">library(plotrix)
+pie3D(table(GermanCredit.org$personal_status_sex),
+    labels = levels(GermanCredit.org$personal_status_sex), 
+main = &quot;An exploded 3D pie chart&quot;, explode=0.1, radius=.9, labelcex = 1.3,  start=0.7)
+</code></pre>
+
+<p><img src="figure/unnamed-chunk-3-1.png" alt="plot of chunk unnamed-chunk-3"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <article data-timings="">
+    <pre><code class="r">ggplot(GermanCredit.org, aes(age)) + geom_histogram(binwidth=4, colour=&quot;black&quot;, fill=&quot;green&quot;) +
+  labs(x= &quot;Age&quot;,y= &quot;Frequency&quot; , title = &quot;Plot of Age&quot;)
+</code></pre>
+
+<p><img src="figure/unnamed-chunk-4-1.png" alt="plot of chunk unnamed-chunk-4"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <article data-timings="">
+    <pre><code class="r">ggplot(GermanCredit.org,aes(x=age,fill=credit_risk))+facet_wrap(~personal_status_sex)+
+  geom_histogram(binwidth = 5)+labs(x=&quot;Customer Age&quot;,y=&quot;Customer count&quot;,
+     title=&quot;Age distribution by gender and marital status&quot;)
+</code></pre>
+
+<p><img src="figure/unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <article data-timings="">
+    <pre><code class="r">ggplot(GermanCredit.org,aes(x=age,fill=credit_risk))+
+  facet_wrap(~housing)+
+  geom_histogram(binwidth = 5)+labs(x=&quot;Customer Age&quot;,y=&quot;Customer count&quot;,
+          title=&quot;Age distribution by housing&quot;)
+</code></pre>
+
+<p><img src="figure/unnamed-chunk-6-1.png" alt="plot of chunk unnamed-chunk-6"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <article data-timings="">
+    <pre><code class="r">ggplot(GermanCredit.org,aes(x=age,fill=credit_risk))+
+  facet_wrap(housing~personal_status_sex)+
+    geom_histogram(binwidth = 5)+labs(x=&quot;Customer Age&quot;,y=&quot;Customer count&quot;,
+title=&quot;Age distribution by gender , marital status and housing&quot;)
+</code></pre>
+
+<p><img src="figure/unnamed-chunk-7-1.png" alt="plot of chunk unnamed-chunk-7"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Actual data is biased towards Good</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">qplot(GermanCredit.org$credit_risk,main=&quot;Raw data proportion&quot;)
+</code></pre>
+
+<p><img src="figure/unnamed-chunk-8-1.png" alt="plot of chunk unnamed-chunk-8"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>...hence balancing the output variable</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">#install.packages(&quot;unbalanced&quot;)
+library(unbalanced)
+library(mice)
+#prop.table(table(GermanCredit.org$credit_risk))
+n&lt;-ncol(GermanCredit.org)
+output &lt;-GermanCredit.org[,n]
+input &lt;- GermanCredit.org[,-n]
+data1&lt;-ubBalance(X=input,Y=output,type=&quot;ubSMOTE&quot;,positive=&quot;bad&quot;,percOver=35, 
+                 percUnder=450)
+overdata1&lt;-data.frame(data1$X, credit_risk=data1$Y)
+#Removing null values that were introduced after balancing
+#md.pattern(overdata1)
+overdata1&lt;-overdata1[complete.cases(overdata1),]
+#prop.table(table(overdata1$credit_risk))
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <article data-timings="">
+    <p><img src="figure/unnamed-chunk-10-1.png" alt="plot of chunk unnamed-chunk-10"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Random partition for train and test data set after balancing</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">indx1&lt;-(sample(1:nrow(overdata1),floor(nrow(overdata1)/3)))
+train_data&lt;-overdata1[-indx1,]
+test_data&lt;-overdata1[indx1,]
+nrow(train_data)#67%
+</code></pre>
+
+<pre><code>## [1] 515
+</code></pre>
+
+<pre><code class="r">nrow(test_data)#33%
+</code></pre>
+
+<pre><code>## [1] 257
+</code></pre>
+
+<pre><code class="r">nrow(overdata1[rownames(test_data)%in%rownames(train_data),]) #Validation
+</code></pre>
+
+<pre><code>## [1] 0
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Butilding decision tree to identify the important features of the the data set that are actually contributing to our output variable</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">par(mfrow=c(1,1))
+rp1&lt;-rpart::rpart(credit_risk~.,data=train_data)
+rpart::printcp(rp1) # Returns important variables
+</code></pre>
+
+<pre><code>## 
+## Classification tree:
+## rpart::rpart(formula = credit_risk ~ ., data = train_data)
+## 
+## Variables actually used in tree construction:
+## [1] amount         credit_history duration       purpose       
+## [5] status        
+## 
+## Root node error: 200/515 = 0.38835
+## 
+## n= 515 
+## 
+##       CP nsplit rel error xerror     xstd
+## 1 0.1325      0     1.000  1.000 0.055301
+## 2 0.0650      2     0.735  0.815 0.052775
+## 3 0.0275      3     0.670  0.780 0.052141
+## 4 0.0100      5     0.615  0.730 0.051139
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <article data-timings="">
+    <p><img src="figure/unnamed-chunk-13-1.png" alt="plot of chunk unnamed-chunk-13"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h1>Apply the identified important featrures to each models</h1>
+  </hgroup>
+  <article data-timings="">
+    <h2>Model 1 : GLM</h2>
+
+<pre><code class="r">model_glm_f&lt;-caret::train(credit_risk~age+amount+credit_history+duration+
+                            installment_rate+housing+
+                            property+purpose+status,
+                          data=train_data,method=&quot;glm&quot;,family=&quot;binomial&quot;)
+predict_glm_f&lt;-predict(model_glm_f,newdata = test_data)
+conf_glm&lt;-confusionMatrix(data=predict_glm_f,test_data$credit_risk)
+p1&lt;-conf_glm$overall[&#39;Accuracy&#39;]
+p1
+</code></pre>
+
+<pre><code>##  Accuracy 
+## 0.7003891
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Model 2 : Random Forest</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">model_nb_f&lt;-caret::train(credit_risk~age+amount+credit_history+duration+
+                           installment_rate+housing+
+                           property+purpose+status,data=train_data,method=&quot;rf&quot;)
+predict_nb_f&lt;-predict(model_nb_f,newdata = test_data)
+conf_rf&lt;-confusionMatrix(data = predict_nb_f,test_data$credit_risk)
+p2&lt;-conf_rf$overall[&#39;Accuracy&#39;]
+p2
+</code></pre>
+
+<pre><code>##  Accuracy 
+## 0.7743191
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Model 3 : Naive Bayes</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">model_nb_f&lt;-caret::train(credit_risk~age+amount+credit_history+duration+
+                             installment_rate+housing+
+                             property+purpose+status,data=train_data,method=&quot;nb&quot;)
+predict_nb_f&lt;-predict(model_nb_f,newdata = test_data)
+conf_nb&lt;-confusionMatrix(data = predict_nb_f,test_data$credit_risk)
+p3&lt;-conf_nb$overall[&quot;Accuracy&quot;]
+p3
+</code></pre>
+
+<pre><code>## Accuracy 
+## 0.618677
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Accuray comparision to identify the winner!!!</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">Final_comp&lt;-c(glm=p1,rf=p2,nb=p3)
+dotplot(Final_comp,horizontal=T)
+</code></pre>
+
+<p><img src="figure/unnamed-chunk-17-1.png" alt="plot of chunk unnamed-chunk-17"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='NA'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Environment set-up'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='NA'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Removing the additional level from Gender'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='NA'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='NA'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='NA'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='NA'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='NA'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Actual data is biased towards Good'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='...hence balancing the output variable'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='NA'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Random partition for train and test data set after balancing'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Butilding decision tree to identify the important features of the the data set that are actually contributing to our output variable'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='NA'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Apply the identified important featrures to each models'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Model 2 : Random Forest'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Model 3 : Naive Bayes'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Accuray comparision to identify the winner!!!'>
+         19
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
