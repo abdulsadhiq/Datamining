@@ -200,7 +200,7 @@ nrow(overdata1[rownames(test_data)%in%rownames(train_data),]) #Validation
 ```
 
 ---
-<h2>Butilding decision tree to identify the important features of the the data set that are actually contributing to our output variable</h2>
+<h2>Building decision tree to identify the important features of the the data set that are actually contributing to our output variable</h2>
 
 ```r
 par(mfrow=c(1,1))
@@ -289,7 +289,7 @@ p3
 ```
 
 ---
-<h2>Accuray comparision to identify the winner!!!</h2>
+<h2>Accuracy comparison to identify the winner!!!</h2>
 
 ```r
 Final_comp<-c(glm=p1,rf=p2,nb=p3)
